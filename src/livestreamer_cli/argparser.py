@@ -755,6 +755,11 @@ transport.add_argument(
     Useful when debugging rtmpdump related issues.
     """
 )
+transport.add_argument("--gateway",
+    help="""
+    Add route to specific gateway ip. (windows only)
+    """
+)
 
 
 http = parser.add_argument_group("HTTP options")

@@ -330,6 +330,22 @@ def handle_stream(plugin, streams, stream_name):
     stream_name = resolve_stream_name(streams, stream_name)
     stream = streams[stream_name]
 
+    # Add route for this domain to gateway
+    try:
+        import urlparse, socket, logging, subprocess
+        
+        host = urlparse.urlparse(stream.url).hostname
+        ip = socket.gethostbyname(host)
+        cmd = ["route", "add", ip, args.gateway]
+        console.logger.info("Adding route {} to {}".format(ip, args.gateway))
+        subprocess.check_output(cmd)
+    except subprocess.CalledProcessError:
+        logging.error("route add failed. admin?")
+    except socket.gaierror as e:
+        logging.error(e)
+    except Exception:
+        logging.exception("Routing failed")
+
     # Print internal command-line if this stream
     # uses a subprocess.
     if args.subprocess_cmdline:
